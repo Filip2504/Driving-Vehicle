@@ -1,0 +1,86 @@
+//motorA - lewy
+//motorB - prawy
+//motorA:
+int directionPinA = 12;
+int pwmPinA = 3;
+int brakePinA = 9;
+//motorB:
+int directionPinB = 13;
+int pwmPinB = 11;
+int brakePinB = 8;
+// inne
+int n = 100; //max wypelnienie pwm
+//boolean to switch direction
+bool directionState;
+void setup()
+{
+//define pins
+pinMode(directionPinA, OUTPUT); //pin motoru A
+pinMode(directionPinB, OUTPUT); //pin motoru B
+pinMode(pwmPinA, OUTPUT); //pwm dla motoru A
+pinMode(pwmPinB, OUTPUT); //pwm dla motoru B
+pinMode(brakePinA, OUTPUT); //hamowanie dla motoru A
+pinMode(brakePinB, OUTPUT); //hamowanie dla motoru A
+}
+void motor_rozruch()
+{
+  //rozruch
+  for(int i=0; i<=n; i=i+10)
+  {
+  analogWrite(pwmPinA, i);
+  analogWrite(pwmPinB, i);
+  delay(20);
+  }
+}
+void motor_hamowanie()
+{
+  //hamowanie
+  for(int i=n; i>=0; i=i-10)
+  {
+  analogWrite(pwmPinA, i);
+  analogWrite(pwmPinB, i);
+  delay(20);
+  }
+}
+void motor_ruch()
+{
+  digitalWrite(directionPinA, LOW);
+  analogWrite(pwmPinA, n);
+  digitalWrite(directionPinB, HIGH);
+  analogWrite(pwmPinB, n);
+}
+void motor_stop()
+{
+  analogWrite(pwmPinA, 0);
+  analogWrite(pwmPinB, 0);
+}
+void motor_cofanie()
+{
+  digitalWrite(directionPinA, HIGH);
+  analogWrite(pwmPinA, n);
+  digitalWrite(directionPinB, LOW);
+  analogWrite(pwmPinB, n);  
+}
+void skret_lewo() //A stop B jedzie
+{
+  analogWrite(pwmPinA, 0);
+  analogWrite(pwmPinB, n);
+  delay(50); 
+}
+void skret_prawo() //B stop A jedzie
+{
+  analogWrite(pwmPinA, n);
+  analogWrite(pwmPinB, 0);
+  delay(50);
+}
+void loop() 
+{
+  motor_rozruch();
+  motor_ruch();
+  delay(2000);  
+  motor_hamowanie();
+  motor_cofanie();
+  delay(2000);
+  motor_stop();
+  delay(3000);
+}
